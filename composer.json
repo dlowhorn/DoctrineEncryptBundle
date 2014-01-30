@@ -1,5 +1,5 @@
 {
-    "name": "vmelnik/doctrine-encrypt-bundle",
+    "name": "dlowhorn/doctrine-encrypt-bundle",
     "type": "library",
     "keywords": ["doctrine", "aes256", "encrypt", "decrypt"],
     "license": "MIT",
@@ -17,6 +17,10 @@
         {
             "name": "Victor Melnik",
             "email": "melnikvictorl@gmail.com"
+        },
+         {
+            "name": "Daniel Lowhorn",
+            "email": "daniel.ltwp@gmail.com"
         }
-    ]
+   ]
 }
