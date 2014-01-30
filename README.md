@@ -16,3 +16,7 @@ This bundle is under the MIT license. See the complete license in the bundle
 ###Versions
 
 I'm using Semantic Versioning like described [here](http://semver.org)
+
+###Fork
+
+This is the Dlowhorn version, forked from VMelnik
