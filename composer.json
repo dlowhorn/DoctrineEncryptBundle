@@ -1,5 +1,5 @@
 {
-    "name": "dlowhorn/doctrine-encrypt-bundle",
+    "name": "vmelnik/doctrine-encrypt-bundle",
     "type": "library",
     "keywords": ["doctrine", "aes256", "encrypt", "decrypt"],
     "license": "MIT",
