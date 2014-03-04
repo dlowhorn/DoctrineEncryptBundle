@@ -159,14 +159,14 @@ class DoctrineEncryptSubscriber implements EventSubscriber {
                 // we have annotation and if it decrypt operation, we must avoid double decryption
                 $propName = $refProperty->getName();
                 if ($refProperty->isPublic()) {
-		    // Do not try to decrypt a null value
-		    if ($encryptorMethod == 'decrypt' AND is_null($refProperty->getValue())) continue;
+		    // Do not try to en/decrypt a null value
+		    if (is_null($refProperty->getValue())) continue;
                     $entity->$propName = $this->encryptor->$encryptorMethod($refProperty->getValue());
                 } else {
                     $methodName = self::capitalize($propName);
                     if ($reflectionClass->hasMethod($getter = 'get' . $methodName) && $reflectionClass->hasMethod($setter = 'set' . $methodName)) {
-			// Do not try to decrypt a null value
-			if ($encryptorMethod == 'decrypt' AND is_null($entity->$getter())) continue;
+			// Do not try to en/decrypt a null value
+			if (is_null($entity->$getter())) continue;
                         $currentPropValue = $this->encryptor->$encryptorMethod($entity->$getter());
                         $entity->$setter($currentPropValue);
                     } else {
