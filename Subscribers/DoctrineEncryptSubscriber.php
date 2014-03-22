@@ -127,6 +127,7 @@ class DoctrineEncryptSubscriber implements EventSubscriber {
             Events::prePersist,
             Events::preUpdate,
             Events::postLoad,
+            Events::postPersist
         );
     }
 
