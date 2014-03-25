@@ -93,13 +93,15 @@ class DoctrineEncryptSubscriber implements EventSubscriber {
      * @param LifecycleEventArgs $args 
      */
     public function preUpdate(PreUpdateEventArgs $args) {
-        $reflectionClass = new ReflectionClass($args->getEntity());
-        $properties = $reflectionClass->getProperties();
-        foreach ($properties as $refProperty) {
-            if ($this->annReader->getPropertyAnnotation($refProperty, self::ENCRYPTED_ANN_NAME)) {
-                $propName = $refProperty->getName();
-		if (!$args->hasChangedField($propName)) continue; // Skip over any unchanged fields
-                $args->setNewValue($propName, $this->encryptor->encrypt($args->getNewValue($propName)));
+        if (in_array(Events::preUpdate, self::$subscribedEvents)) {
+            $reflectionClass = new ReflectionClass($args->getEntity());
+            $properties = $reflectionClass->getProperties();
+            foreach ($properties as $refProperty) {
+                if ($this->annReader->getPropertyAnnotation($refProperty, self::ENCRYPTED_ANN_NAME)) {
+                    $propName = $refProperty->getName();
+            if (!$args->hasChangedField($propName)) continue; // Skip over any unchanged fields
+                    $args->setNewValue($propName, $this->encryptor->encrypt($args->getNewValue($propName)));
+                }
             }
         }
     }
@@ -110,12 +112,25 @@ class DoctrineEncryptSubscriber implements EventSubscriber {
      * @param LifecycleEventArgs $args 
      */
     public function postLoad(LifecycleEventArgs $args) {
-        $entity = $args->getEntity();
-        if (!$this->hasInDecodedRegistry($entity, $args->getEntityManager())) {
-            if ($this->processFields($entity, false)) {
-                $this->addToDecodedRegistry($entity, $args->getEntityManager());
+        if (in_array(Events::postLoad, self::$subscribedEvents)) {
+            $entity = $args->getEntity();
+            if (!$this->hasInDecodedRegistry($entity, $args->getEntityManager())) {
+                if ($this->processFields($entity, false)) {
+                    $this->addToDecodedRegistry($entity, $args->getEntityManager());
+                }
             }
         }
+    }
+
+    protected static $subscribedEvents = array(
+        Events::prePersist,
+        Events::preUpdate,
+        Events::postLoad,
+        Events::postPersist
+    );
+
+    public static function setSubscribedEvents($events) {
+        self::$subscribedEvents = $events;
     }
 
     /**
@@ -123,12 +138,7 @@ class DoctrineEncryptSubscriber implements EventSubscriber {
      * @return Array Return all events which this subscriber is listening
      */
     public function getSubscribedEvents() {
-        return array(
-            Events::prePersist,
-            Events::preUpdate,
-            Events::postLoad,
-            Events::postPersist
-        );
+        return self::$subscribedEvents;
     }
 
     /**
